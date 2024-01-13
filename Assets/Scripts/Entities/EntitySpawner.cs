@@ -13,8 +13,9 @@ public class EntitySpawner : MonoBehaviour {
     
     void Update() {
         // Spawn an entity at a random position when the space key is pressed
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            Vector3 randomPosition = new Vector3(Random.Range(-10, 10), 1, Random.Range(-10, 10));
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Vector3 randomPosition = new Vector3(Random.Range(-10, 10), 1, Random.Range(-10, 10)); // Set y to 1
             SpawnEntity(randomPosition);
         }
     }

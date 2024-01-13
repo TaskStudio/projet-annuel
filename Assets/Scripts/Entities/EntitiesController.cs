@@ -57,18 +57,29 @@ public class EntitiesController : MonoBehaviour
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
-            // Updated raycast without the layer mask and with a longer distance
-            if (Physics.Raycast(ray, out hit, 1000)) // Increased distance
+            if (Physics.Raycast(ray, out hit, 1000))
             {
-                Debug.Log("Moving entity to: " + hit.point); // Check if this gets logged
-                foreach (GameObject entity in selectedEntities)
+                float circleRadius = 2f; // Adjust this radius as needed
+                int entityCount = selectedEntities.Count;
+                float angleIncrement = 360f / entityCount;
+
+                for (int i = 0; i < entityCount; i++)
                 {
-                    entity.transform.position = hit.point;
+                    float angleDegrees = angleIncrement * i;
+                    float angleRadians = angleDegrees * Mathf.Deg2Rad;
+                    Vector3 entityTargetPosition = new Vector3(
+                        hit.point.x + Mathf.Cos(angleRadians) * circleRadius, 
+                        1, 
+                        hit.point.z + Mathf.Sin(angleRadians) * circleRadius
+                    );
+
+                    // Set the target position for the entity to move to
+                    EntityMover entityMover = selectedEntities[i].GetComponent<EntityMover>();
+                    if (entityMover != null)
+                    {
+                        entityMover.SetTargetPosition(entityTargetPosition);
+                    }
                 }
-            }
-            else
-            {
-                Debug.Log("Raycast did not hit any collider"); // Check if raycast is failing
             }
         }
 
