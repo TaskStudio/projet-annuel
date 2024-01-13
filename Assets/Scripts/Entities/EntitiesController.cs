@@ -59,25 +59,29 @@ public class EntitiesController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, 1000))
             {
-                float circleRadius = 2f; // Adjust this radius as needed
-                int entityCount = selectedEntities.Count;
-                float angleIncrement = 360f / entityCount;
+                int entitiesPerSide = Mathf.CeilToInt(Mathf.Sqrt(selectedEntities.Count));
+                float spacing = 1f; // Adjust this spacing as needed
+                float totalLength = spacing * (entitiesPerSide - 1);
+                Vector3 startPoint = hit.point - new Vector3(totalLength / 2, 0, totalLength / 2);
 
-                for (int i = 0; i < entityCount; i++)
+                int entityIndex = 0;
+                for (int i = 0; i < entitiesPerSide; i++)
                 {
-                    float angleDegrees = angleIncrement * i;
-                    float angleRadians = angleDegrees * Mathf.Deg2Rad;
-                    Vector3 entityTargetPosition = new Vector3(
-                        hit.point.x + Mathf.Cos(angleRadians) * circleRadius, 
-                        1, 
-                        hit.point.z + Mathf.Sin(angleRadians) * circleRadius
-                    );
-
-                    // Set the target position for the entity to move to
-                    EntityMover entityMover = selectedEntities[i].GetComponent<EntityMover>();
-                    if (entityMover != null)
+                    for (int j = 0; j < entitiesPerSide; j++)
                     {
-                        entityMover.SetTargetPosition(entityTargetPosition);
+                        if (entityIndex >= selectedEntities.Count)
+                            break;
+
+                        Vector3 entityTargetPosition = startPoint + new Vector3(spacing * i, 1, spacing * j);
+
+                        // Set the target position for the entity to move to
+                        EntityMover entityMover = selectedEntities[entityIndex].GetComponent<EntityMover>();
+                        if (entityMover != null)
+                        {
+                            entityMover.SetTargetPosition(entityTargetPosition);
+                        }
+
+                        entityIndex++;
                     }
                 }
             }
