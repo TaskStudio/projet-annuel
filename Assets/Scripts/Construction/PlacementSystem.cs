@@ -5,7 +5,6 @@ using System.Security.Cryptography;
 using UnityEngine;
 using GameInput;
 using UnityEngine.Serialization;
-using BuildingState = Construction.Building.StateEnum;
 
 
 namespace Construction
@@ -28,7 +27,7 @@ namespace Construction
         {
             StopPlacement();
             selectedBuilding = Instantiate(buildingDatabase.buildingsData.Find(x => x.ID == ID).Prefab);
-            selectedBuilding.state = BuildingState.Preview;
+            selectedBuilding.StartPreview();
             
             _isBuildingSelected = selectedBuilding != null;
         }
@@ -45,7 +44,7 @@ namespace Construction
 
         private void Update()
         {
-            if (_isBuildingSelected && selectedBuilding.state == BuildingState.Preview)
+            if (_isBuildingSelected && selectedBuilding.state == Building.BuildingStates.Preview)
             {
                 Vector3 worldMousePos = mouseControl.GetCursorMapPosition();
                 Vector3Int gridMousePos = grid.WorldToCell(worldMousePos);
