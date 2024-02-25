@@ -8,18 +8,22 @@ using UnityEngine.UI;
 
 namespace Construction
 {
-    public class BuildingButton : Button 
+    public class BuildingButton : MonoBehaviour 
     {
+        [SerializeField] private TextMeshPro buttonText;
         public PlacementSystem placementSystem{ get; internal set; }
         public int buildingID { get; internal set; }
         public string buildingName { get; internal set; }
         
-        protected override void Start()
+
+        public void Initialize(int buildingID, string buildingName, PlacementSystem placementSystem)
         {
-            base.Start();
-            GetComponentInChildren<TextMeshProUGUI>().text = buildingName;
+            this.buildingID = buildingID;
+            this.buildingName = buildingName;
+            this.placementSystem = placementSystem;
+            buttonText.text = buildingName;
         }
-        
+
         public void ClickHandler()
         {
             placementSystem.StartPlacement(buildingID);

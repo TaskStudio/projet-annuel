@@ -1,11 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using UnityEngine;
+using Building;
 using GameInput;
-using UnityEngine.Serialization;
-
+using UnityEngine;
 
 namespace Construction
 {
@@ -14,13 +9,27 @@ namespace Construction
         [SerializeField] private Grid grid;
         [SerializeField] private MouseControl mouseControl;
         [SerializeField] private BuildingDatabaseSO buildingDatabase;
-        
-        private Building selectedBuilding;
         private bool _isBuildingSelected;
+
+        private GridData gridData;
+        private Building selectedBuilding;
 
         private void Start()
         {
             _isBuildingSelected = false;
+            gridData = new GridData();
+        }
+
+        private void Update()
+        {
+            if (_isBuildingSelected && selectedBuilding.state == Building.BuildingStates.Preview)
+            {
+                var worldMousePos = mouseControl.GetCursorMapPosition();
+                var gridMousePos = grid.WorldToCell(worldMousePos);
+                var gridWorldPos = grid.CellToWorld(gridMousePos);
+                // selectedBuilding.gridPosition = new Vector2Int(gridMousePos.x, gridMousePos.y);
+                selectedBuilding.transform.position = gridWorldPos;
+            }
         }
 
         public void StartPlacement(int ID)
@@ -28,7 +37,7 @@ namespace Construction
             StopPlacement();
             selectedBuilding = Instantiate(buildingDatabase.buildingsData.Find(x => x.ID == ID).Prefab);
             selectedBuilding.StartPreview();
-            
+
             _isBuildingSelected = selectedBuilding != null;
         }
 
@@ -39,18 +48,6 @@ namespace Construction
                 Destroy(selectedBuilding.gameObject);
                 selectedBuilding = null;
                 _isBuildingSelected = false;
-            }
-        }
-
-        private void Update()
-        {
-            if (_isBuildingSelected && selectedBuilding.state == Building.BuildingStates.Preview)
-            {
-                Vector3 worldMousePos = mouseControl.GetCursorMapPosition();
-                Vector3Int gridMousePos = grid.WorldToCell(worldMousePos);
-                Vector3 gridWorldPos = grid.CellToWorld(gridMousePos);
-                selectedBuilding.gridPosition = new Vector2Int(gridMousePos.x, gridMousePos.y);
-                selectedBuilding.transform.position = gridWorldPos;
             }
         }
     }

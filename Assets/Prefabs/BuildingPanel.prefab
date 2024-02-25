@@ -115,4 +115,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildingDatabase: {fileID: 11400000, guid: 75993a428bfe5ed4caa8ee745a0b6550, type: 2}
-  buttonPrefab: {fileID: 1986153558765141592, guid: c4abf5886f8578f47aad6d766eaf0312, type: 3}
+  buttonPrefab: {fileID: 1454386986360729383, guid: c4abf5886f8578f47aad6d766eaf0312, type: 3}
+  placementSystem: {fileID: 0}
