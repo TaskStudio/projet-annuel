@@ -1,16 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class CameraSystem : MonoBehaviour
 {
+    [SerializeField] private CinemachineVirtualCamera virtualCamera; 
+    
+    [SerializeField] private float fovMax = 40; 
+    [SerializeField] private float fovMin = 10; 
+    private float _targetFov = 40;
 
     [SerializeField] private bool useEdgeScrolling = true;
-    
     [SerializeField] private float cameraMoveSpeed = 50f;
 
-    [SerializeField] private float cameraRotateDir = 0f;
+    [SerializeField] private float cameraRotateDir;
     [SerializeField] private float cameraRotateSpeed = 100f;
 
     [SerializeField] private int edgeScrollSize = 30;
@@ -33,6 +38,7 @@ public class CameraSystem : MonoBehaviour
         }
         //Rotation mechanisms
         HandleRotation();
+        HandleZoom();
     }
 
     private void HandleEdgesMovement()
@@ -59,4 +65,12 @@ public class CameraSystem : MonoBehaviour
         transform.eulerAngles += new Vector3(0, cameraRotateDir * cameraRotateSpeed * Time.deltaTime, 0);
     }
 
+    private void HandleZoom()
+    {
+        if (Input.mouseScrollDelta.y < 0) _targetFov += 5;
+        if (Input.mouseScrollDelta.y > 0) _targetFov -= 5;        
+        _targetFov = Mathf.Clamp(_targetFov, fovMin, fovMax);
+        
+        virtualCamera.m_Lens.FieldOfView = _targetFov;
+    }
 }
