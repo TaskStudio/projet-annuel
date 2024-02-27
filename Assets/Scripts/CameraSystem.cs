@@ -11,6 +11,7 @@ public class CameraSystem : MonoBehaviour
     [SerializeField] private float fovMax = 40; 
     [SerializeField] private float fovMin = 10; 
     private float _targetFov = 40;
+    [SerializeField] private float zoomSpeed = 10f; 
 
     [SerializeField] private bool useEdgeScrolling = true;
     [SerializeField] private float cameraMoveSpeed = 50f;
@@ -71,6 +72,7 @@ public class CameraSystem : MonoBehaviour
         if (Input.mouseScrollDelta.y > 0) _targetFov -= 5;        
         _targetFov = Mathf.Clamp(_targetFov, fovMin, fovMax);
         
-        virtualCamera.m_Lens.FieldOfView = _targetFov;
+        virtualCamera.m_Lens.FieldOfView = 
+            Mathf.Lerp(virtualCamera.m_Lens.FieldOfView, _targetFov, Time.deltaTime * zoomSpeed);
     }
 }
