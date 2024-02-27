@@ -33,6 +33,7 @@ public class CameraSystem : MonoBehaviour
         if (Input.mousePosition.x > Screen.width - edgeScrollSize) inputDir.x = +1f;
         if (Input.mousePosition.y > Screen.height - edgeScrollSize) inputDir.z = +1f;
         
+        //Movements mechanisms
         Vector3 cameraMoveDir = cachedTransform.forward * inputDir.z + cachedTransform.right * inputDir.x;
         cachedTransform.position += cameraMoveDir * (cameraMoveSpeed * Time.deltaTime);
         
