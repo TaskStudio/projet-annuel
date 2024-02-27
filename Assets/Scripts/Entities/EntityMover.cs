@@ -3,7 +3,8 @@ using UnityEngine;
 public class EntityMover : MonoBehaviour
 {
     private Vector3 targetPosition;
-    private bool isMoving = false;
+    private bool isMoving;
+
     public float moveSpeed = 5f;
 
     public void SetTargetPosition(Vector3 position)
@@ -12,15 +13,20 @@ public class EntityMover : MonoBehaviour
         isMoving = true;
     }
 
-    void Update()
+    private void Update()
     {
         if (isMoving)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
-            if (Vector3.Distance(transform.position, targetPosition) < 0.01f)
-            {
-                isMoving = false;
-            }
+            MoveTowardsTarget();
+        }
+    }
+
+    private void MoveTowardsTarget()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+        if (Vector3.Distance(transform.position, targetPosition) < 0.01f)
+        {
+            isMoving = false;
         }
     }
 }

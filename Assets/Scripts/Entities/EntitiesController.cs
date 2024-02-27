@@ -1,18 +1,16 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EntitiesController : MonoBehaviour
 {
     public Camera mainCamera;
-    public LayerMask clickableLayer; // Set this to the layer your entities are on
+    public LayerMask clickableLayer;
     private List<GameObject> selectedEntities = new List<GameObject>();
     private bool isDragging = false;
     private Vector3 mouseDragStart;
 
     void Update()
     {
-        // Single Selection
         if (Input.GetMouseButtonDown(0))
         {
             mouseDragStart = Input.mousePosition;
@@ -21,16 +19,13 @@ public class EntitiesController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, 100, clickableLayer))
             {
-                Debug.Log("Hit entity: " + hit.collider.gameObject.name); // Debug statement for entity selection
                 SelectEntity(hit.collider.gameObject);
             }
             else
             {
-                Debug.Log("No entity hit"); // Debug statement for no hit
                 ClearSelection();
             }
         }
-
 
         // Initiate Drag Selection
         if (Input.GetMouseButton(0))
@@ -60,7 +55,7 @@ public class EntitiesController : MonoBehaviour
             if (Physics.Raycast(ray, out hit, 1000))
             {
                 int entitiesPerSide = Mathf.CeilToInt(Mathf.Sqrt(selectedEntities.Count));
-                float spacing = 1f; // Adjust this spacing as needed
+                float spacing = 1f; // Spacing
                 float totalLength = spacing * (entitiesPerSide - 1);
                 Vector3 startPoint = hit.point - new Vector3(totalLength / 2, 0, totalLength / 2);
 
@@ -100,31 +95,37 @@ public class EntitiesController : MonoBehaviour
         {
             selectedEntities.Add(entity);
         }
+        entity.GetComponent<EntityVisuals>().UpdateVisuals(true);
     }
 
 
     private void ClearSelection()
     {
-        // Deselect all entities
+        foreach (GameObject entity in selectedEntities)
+        {
+            EntityVisuals entityVisuals = entity.GetComponent<EntityVisuals>();
+            if (entityVisuals != null) 
+            {
+                entityVisuals.UpdateVisuals(false);
+            }
+        }
         selectedEntities.Clear();
     }
+
 
     private void SelectEntitiesInDrag()
     {
         Rect selectionRect = Utils.GetScreenRect(mouseDragStart, Input.mousePosition);
-        GameObject[] allEntities = GameObject.FindGameObjectsWithTag("Entity"); // Ensure your entities have this tag
-
-        Debug.Log("Selection box drawn: " + selectionRect); // Debug to check the rectangle size and position
+        GameObject[] allEntities = GameObject.FindGameObjectsWithTag("Entity"); 
 
         foreach (GameObject entity in allEntities)
         {
             Vector3 screenPosition = mainCamera.WorldToScreenPoint(entity.transform.position);
-            screenPosition.y = Screen.height - screenPosition.y; // Invert y for GUI coordinates
+            screenPosition.y = Screen.height - screenPosition.y; 
 
             if (selectionRect.Contains(screenPosition, true))
             {
-                SelectEntity(entity, false); // false to not clear the current selection
-                Debug.Log("Entity selected: " + entity.name); // Debug to check which entity is selected
+                SelectEntity(entity, false); 
             }
         }
     }

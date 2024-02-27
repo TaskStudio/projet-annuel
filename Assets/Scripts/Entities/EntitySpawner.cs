@@ -1,18 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EntitySpawner : MonoBehaviour {
-    public GameObject entityPrefab; // Exposed in Unity Editor
+    public GameObject entityPrefab; 
     
     void Start() {
-        // Spawns one entity automatically at the start
-        Vector3 startPosition = new Vector3(0, 1, 0); // You can change this start position as needed
+        
+        Vector3 startPosition = new Vector3(0, 1, 0); 
         SpawnEntity(startPosition);
     }
     
     void Update() {
-        // Spawn an entity at a random position when the space key is pressed
+        
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Vector3 randomPosition = new Vector3(Random.Range(-10, 10), 1, Random.Range(-10, 10)); // Set y to 1
