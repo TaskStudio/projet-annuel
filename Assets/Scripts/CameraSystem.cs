@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,14 @@ public class CameraSystem : MonoBehaviour
 
     public int edgeScrollSize = 30;
     
+    private Transform cachedTransform;
+
+    private void Start()
+    {
+        // Cache the transform at the start
+        cachedTransform = transform;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -24,9 +33,8 @@ public class CameraSystem : MonoBehaviour
         if (Input.mousePosition.x > Screen.width - edgeScrollSize) inputDir.x = +1f;
         if (Input.mousePosition.y > Screen.height - edgeScrollSize) inputDir.z = +1f;
         
-        Vector3 cameraMoveDir = transform.forward * inputDir.z + transform.right * inputDir.x;
-
-        transform.position += cameraMoveDir * (cameraMoveSpeed * Time.deltaTime);
+        Vector3 cameraMoveDir = cachedTransform.forward * inputDir.z + cachedTransform.right * inputDir.x;
+        cachedTransform.position += cameraMoveDir * (cameraMoveSpeed * Time.deltaTime);
         
         //Rotations mechanisms
         cameraRotateDir = 0f;
