@@ -6,38 +6,52 @@ using UnityEngine;
 public class CameraSystem : MonoBehaviour
 {
 
-    public float cameraMoveSpeed = 50f;
-
-    public float cameraRotateDir = 0f;
-    public float cameraRotateSpeed = 100f;
-
-    public int edgeScrollSize = 30;
+    [SerializeField] private bool useEdgeScrolling = true;
     
-    private Transform cachedTransform;
+    [SerializeField] private float cameraMoveSpeed = 50f;
+
+    [SerializeField] private float cameraRotateDir = 0f;
+    [SerializeField] private float cameraRotateSpeed = 100f;
+
+    [SerializeField] private int edgeScrollSize = 30;
+    
+    private Transform _cachedTransform;
 
     private void Start()
     {
         // Cache the transform at the start
-        cachedTransform = transform;
+        _cachedTransform = transform;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //Edges movements mechanisms
+        if (useEdgeScrolling)
+        {
+            HandleCameraEdgesMovement();
+        }
+        //Rotation mechanisms
+        HandleCameraRotation();
+    }
+
+    private void HandleCameraEdgesMovement()
+    {
         //Movement variables
-        Vector3 inputDir = new Vector3(0, 0, 0);
+        var inputDir = new Vector3(0, 0, 0);
         
-        //Edges mechanisms
         if (Input.mousePosition.x < edgeScrollSize) inputDir.x = -1f;
         if (Input.mousePosition.y < edgeScrollSize) inputDir.z = -1f;
         if (Input.mousePosition.x > Screen.width - edgeScrollSize) inputDir.x = +1f;
         if (Input.mousePosition.y > Screen.height - edgeScrollSize) inputDir.z = +1f;
-        
+    
         //Movements mechanisms
-        Vector3 cameraMoveDir = cachedTransform.forward * inputDir.z + cachedTransform.right * inputDir.x;
-        cachedTransform.position += cameraMoveDir * (cameraMoveSpeed * Time.deltaTime);
-        
-        //Rotations mechanisms
+        var cameraMoveDir = _cachedTransform.forward * inputDir.z + _cachedTransform.right * inputDir.x;
+        _cachedTransform.position += cameraMoveDir * (cameraMoveSpeed * Time.deltaTime);
+    }
+    private void HandleCameraRotation()
+    {
+      //Rotations mechanisms
         cameraRotateDir = 0f;
         if (Input.GetKey(KeyCode.A)) cameraRotateDir = +1f;
         if (Input.GetKey(KeyCode.E)) cameraRotateDir = -1f;
