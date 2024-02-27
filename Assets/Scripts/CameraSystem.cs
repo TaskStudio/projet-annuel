@@ -5,22 +5,34 @@ using UnityEngine;
 public class CameraSystem : MonoBehaviour
 {
 
-    public float rotateDir = 0f;
-    public float rotateSpeed = 100f;
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public float cameraMoveSpeed = 50f;
 
+    public float cameraRotateDir = 0f;
+    public float cameraRotateSpeed = 100f;
+
+    public int edgeScrollSize = 30;
+    
     // Update is called once per frame
     void Update()
     {
-        rotateDir = 0f;
-        if (Input.GetKey(KeyCode.A)) rotateDir = +1f;
-        if (Input.GetKey(KeyCode.E)) rotateDir = -1f;
+        //Movement variables
+        Vector3 inputDir = new Vector3(0, 0, 0);
         
-        transform.eulerAngles += new Vector3(0, rotateDir * rotateSpeed * Time.deltaTime, 0);
+        //Edges mechanisms
+        if (Input.mousePosition.x < edgeScrollSize) inputDir.x = -1f;
+        if (Input.mousePosition.y < edgeScrollSize) inputDir.z = -1f;
+        if (Input.mousePosition.x > Screen.width - edgeScrollSize) inputDir.x = +1f;
+        if (Input.mousePosition.y > Screen.height - edgeScrollSize) inputDir.z = +1f;
+        
+        Vector3 cameraMoveDir = transform.forward * inputDir.z + transform.right * inputDir.x;
+
+        transform.position += cameraMoveDir * (cameraMoveSpeed * Time.deltaTime);
+        
+        //Rotations mechanisms
+        cameraRotateDir = 0f;
+        if (Input.GetKey(KeyCode.A)) cameraRotateDir = +1f;
+        if (Input.GetKey(KeyCode.E)) cameraRotateDir = -1f;
+        
+        transform.eulerAngles += new Vector3(0, cameraRotateDir * cameraRotateSpeed * Time.deltaTime, 0);
     }
 }
