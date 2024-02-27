@@ -29,13 +29,13 @@ public class CameraSystem : MonoBehaviour
         //Edges movements mechanisms
         if (useEdgeScrolling)
         {
-            HandleCameraEdgesMovement();
+            HandleEdgesMovement();
         }
         //Rotation mechanisms
-        HandleCameraRotation();
+        HandleRotation();
     }
 
-    private void HandleCameraEdgesMovement()
+    private void HandleEdgesMovement()
     {
         //Movement variables
         var inputDir = new Vector3(0, 0, 0);
@@ -49,7 +49,7 @@ public class CameraSystem : MonoBehaviour
         var cameraMoveDir = _cachedTransform.forward * inputDir.z + _cachedTransform.right * inputDir.x;
         _cachedTransform.position += cameraMoveDir * (cameraMoveSpeed * Time.deltaTime);
     }
-    private void HandleCameraRotation()
+    private void HandleRotation()
     {
       //Rotations mechanisms
         cameraRotateDir = 0f;
@@ -58,4 +58,5 @@ public class CameraSystem : MonoBehaviour
         
         transform.eulerAngles += new Vector3(0, cameraRotateDir * cameraRotateSpeed * Time.deltaTime, 0);
     }
+
 }
