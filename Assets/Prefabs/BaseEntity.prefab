@@ -113,6 +113,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  raycastLength: 5
+  collisionAvoidanceTurn: 0.5
 --- !u!114 &8440928518112588212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,5 +127,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c01c8f9dd02ad8438f929dc82efd73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultColor: {r: 1, g: 1, b: 1, a: 1}
-  selectedColor: {r: 0, g: 1, b: 0, a: 1}
