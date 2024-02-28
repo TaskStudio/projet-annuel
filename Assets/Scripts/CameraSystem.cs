@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using Maps.Classes;
 using UnityEngine;
 
 public class CameraSystem : MonoBehaviour
@@ -22,11 +23,16 @@ public class CameraSystem : MonoBehaviour
     [SerializeField] private int edgeScrollSize = 30;
     
     private Transform _cachedTransform;
+    
+    [SerializeField] private Map gameMap;
 
     private void Start()
     {
         // Cache the transform at the start
         _cachedTransform = transform;
+        
+        // Find the Map component in the scene
+        gameMap = FindObjectOfType<Map>();
     }
 
     // Update is called once per frame
@@ -54,7 +60,10 @@ public class CameraSystem : MonoBehaviour
     
         //Movements mechanisms
         var cameraMoveDir = _cachedTransform.forward * inputDir.z + _cachedTransform.right * inputDir.x;
-        _cachedTransform.position += cameraMoveDir * (cameraMoveSpeed * Time.deltaTime);
+        var proposedPosition = _cachedTransform.position + cameraMoveDir * (cameraMoveSpeed * Time.deltaTime);
+        
+        var clampedPosition = gameMap.ClampPositionToLimits(proposedPosition);
+        _cachedTransform.position = clampedPosition;
     }
     private void HandleRotation()
     {
