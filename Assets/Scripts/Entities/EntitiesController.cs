@@ -54,6 +54,18 @@ public class EntitiesController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, 1000))
             {
+                ResourceNode hitResourceNode = hit.collider.GetComponent<ResourceNode>();
+                if (hitResourceNode != null) {
+                    // Iterate over all selected entities to initiate gathering if they are gatherers
+                    foreach (GameObject entity in selectedEntities) {
+                        ResourceGatherer gatherer = entity.GetComponent<ResourceGatherer>();
+                        if (gatherer != null) {
+                            gatherer.GatherResources(hitResourceNode);
+                            // Do not break here; allow all selected gatherers to attempt to gather
+                        }
+                    }
+                }
+
                 int entitiesPerSide = Mathf.CeilToInt(Mathf.Sqrt(selectedEntities.Count));
                 float spacing = 1f; // Spacing
                 float totalLength = spacing * (entitiesPerSide - 1);
@@ -77,6 +89,7 @@ public class EntitiesController : MonoBehaviour
                         }
 
                         entityIndex++;
+                        
                     }
                 }
             }
