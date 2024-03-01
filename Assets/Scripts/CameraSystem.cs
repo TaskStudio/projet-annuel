@@ -24,7 +24,7 @@ public class CameraSystem : MonoBehaviour
     
     private Transform _cachedTransform;
     
-    [SerializeField] private Map gameMap;
+    private Map _gameMap;
 
     private void Start()
     {
@@ -32,7 +32,7 @@ public class CameraSystem : MonoBehaviour
         _cachedTransform = transform;
         
         // Find the Map component in the scene
-        gameMap = FindObjectOfType<Map>();
+        _gameMap = FindObjectOfType<Map>();
     }
 
     // Update is called once per frame
@@ -62,7 +62,7 @@ public class CameraSystem : MonoBehaviour
         var cameraMoveDir = _cachedTransform.forward * inputDir.z + _cachedTransform.right * inputDir.x;
         var proposedPosition = _cachedTransform.position + cameraMoveDir * (cameraMoveSpeed * Time.deltaTime);
         
-        var clampedPosition = gameMap.ClampPositionToLimits(proposedPosition);
+        var clampedPosition = _gameMap.ClampPositionToLimits(proposedPosition);
         _cachedTransform.position = clampedPosition;
     }
     private void HandleRotation()
