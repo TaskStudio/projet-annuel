@@ -6,8 +6,8 @@ public class Selectable : MonoBehaviour, IPointerClickHandler
 {
     private CinemachineVirtualCamera _virtualCamera;
     private Transform _transform1;
-    
-    void Awake()
+
+    private void Awake()
     {
         _transform1 = transform;
     }
@@ -15,7 +15,6 @@ public class Selectable : MonoBehaviour, IPointerClickHandler
     private void Start()
     {
         _virtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
-        Debug.Log(_virtualCamera);
     }
 
     public void OnPointerClick(PointerEventData eventData)
