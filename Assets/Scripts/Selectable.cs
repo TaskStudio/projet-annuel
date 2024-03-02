@@ -5,11 +5,11 @@ using UnityEngine.EventSystems;
 public class Selectable : MonoBehaviour, IPointerClickHandler
 {
     private CinemachineVirtualCamera _virtualCamera;
-    private Transform _transform1;
+    private Transform _selectedObjectTransform;
 
     private void Awake()
     {
-        _transform1 = transform;
+        _selectedObjectTransform = transform;
     }
 
     private void Start()
@@ -19,7 +19,10 @@ public class Selectable : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        _virtualCamera.LookAt = _transform1;
-        _virtualCamera.Follow = _transform1;    
+        _virtualCamera.LookAt = _selectedObjectTransform;
+        _virtualCamera.Follow = _selectedObjectTransform;
+
+        CameraManager cameraManager = FindObjectOfType<CameraManager>();
+        cameraManager.UpdateLastSelectedObject(_selectedObjectTransform);
     }
 }
