@@ -19,7 +19,8 @@ public class CameraManager : MonoBehaviour
     void Start()
     {
         _virtualCamera = FindObjectOfType<CinemachineVirtualCamera>();    
-        _cameraSystemTransform = FindObjectOfType<CameraSystem>().transform;            
+        _cameraSystemTransform = FindObjectOfType<CameraSystem>().transform;
+        _selectedObjectTransform = _cameraSystemTransform;
         UpdateView();
     }
 
@@ -34,6 +35,7 @@ public class CameraManager : MonoBehaviour
     {
         if (freeView)
         {
+            _cameraSystemTransform.position = _selectedObjectTransform.position; // Camera reposition to last selected Object
             _virtualCamera.LookAt = _cameraSystemTransform;
             _virtualCamera.Follow = _cameraSystemTransform;
         }
