@@ -2,23 +2,25 @@ using UnityEngine;
 
 public class EntityVisuals : MonoBehaviour
 {
-    private Color defaultColor; 
-    private Renderer entityRenderer; 
+    public GameObject selectionIndicatorPrefab; 
+    private GameObject currentIndicatorInstance;
 
-    void Awake()
-    {
-        entityRenderer = GetComponent<Renderer>();
-        if (entityRenderer != null)
-        {
-            defaultColor = entityRenderer.material.color;
-        }
-    }
-    
     public void UpdateVisuals(bool isSelected)
     {
-        if (entityRenderer != null)
+        if (isSelected)
         {
-            entityRenderer.material.color = isSelected ? Color.green : defaultColor;
+            if (currentIndicatorInstance == null)
+            {
+                currentIndicatorInstance = Instantiate(selectionIndicatorPrefab, transform.position, Quaternion.identity, transform);
+                currentIndicatorInstance.transform.localPosition = new Vector3(0, -1f, 0); 
+            }
+        }
+        else
+        {
+            if (currentIndicatorInstance != null)
+            {
+                Destroy(currentIndicatorInstance);
+            }
         }
     }
 }
