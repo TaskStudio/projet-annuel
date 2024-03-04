@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 478117095316257027}
   - component: {fileID: -8309717558407393170}
   - component: {fileID: 8440928518112588212}
-  - component: {fileID: -2496116511688770450}
   m_Layer: 3
   m_Name: BaseEntity
   m_TagString: Entity
@@ -114,6 +113,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  raycastLength: 5
+  collisionAvoidanceTurn: 0.5
 --- !u!114 &8440928518112588212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,17 +127,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c01c8f9dd02ad8438f929dc82efd73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-2496116511688770450
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4489774148682684672}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f17b37e1a552f2b4c8b28a21e883d735, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  carryingCapacity: 20
-  currentResourceType: 0
