@@ -22,5 +22,11 @@ public class ResourceGatherer : MonoBehaviour, IGatherable {
             currentResourceType = resourceNode.resourceType;
         }
     }
+    public void DepositResources(IResourceStorage storage) {
+        if (currentCarryingAmount > 0) {
+            storage.AddResource(currentResourceType, currentCarryingAmount);
+            currentCarryingAmount = 0; // Reset gatherer's carried resources
+        }
+    }
 }
 
