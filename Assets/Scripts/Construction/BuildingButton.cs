@@ -1,27 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Construction
 {
-    public class BuildingButton : MonoBehaviour 
+    public class BuildingButton : MonoBehaviour
     {
-        [SerializeField] private TextMeshPro buttonText;
-        public PlacementSystem placementSystem{ get; internal set; }
+        // [SerializeField] private TextMeshPro buttonText;
+        public PlacementSystem placementSystem { get; internal set; }
         public int buildingID { get; internal set; }
         public string buildingName { get; internal set; }
-        
+
 
         public void Initialize(int buildingID, string buildingName, PlacementSystem placementSystem)
         {
             this.buildingID = buildingID;
             this.buildingName = buildingName;
             this.placementSystem = placementSystem;
-            buttonText.text = buildingName;
+            // buttonText.text = buildingName;
         }
 
         public void ClickHandler()
