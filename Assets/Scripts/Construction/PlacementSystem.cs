@@ -1,4 +1,3 @@
-using Building;
 using GameInput;
 using UnityEngine;
 
@@ -9,45 +8,80 @@ namespace Construction
         [SerializeField] private Grid grid;
         [SerializeField] private MouseControl mouseControl;
         [SerializeField] private BuildingDatabaseSO buildingDatabase;
-        private bool _isBuildingSelected;
 
-        private GridData gridData;
+        private GridData buildingData;
+        private bool isBuildingSelected;
         private Building selectedBuilding;
+        private int selectedBuildingID;
 
         private void Start()
         {
-            _isBuildingSelected = false;
-            gridData = new GridData();
+            isBuildingSelected = false;
+            buildingData = new GridData();
         }
 
         private void Update()
         {
-            if (_isBuildingSelected && selectedBuilding.state == Building.BuildingStates.Preview)
+            if (isBuildingSelected && selectedBuilding.state == Building.BuildingStates.Preview)
             {
-                var worldMousePos = mouseControl.GetCursorMapPosition();
-                var gridMousePos = grid.WorldToCell(worldMousePos);
-                var gridWorldPos = grid.CellToWorld(gridMousePos);
-                // selectedBuilding.gridPosition = new Vector2Int(gridMousePos.x, gridMousePos.y);
+                Vector3 worldMousePos = mouseControl.GetCursorMapPosition();
+                Vector3Int gridMousePos = grid.WorldToCell(worldMousePos);
+                Vector3 gridWorldPos = grid.CellToWorld(gridMousePos);
                 selectedBuilding.transform.position = gridWorldPos;
+
+                Vector2Int buildingSize = buildingDatabase.buildingsData.Find(x => x.ID == selectedBuildingID).Size;
+
+                bool canPlace = buildingData.CanPlaceObjectAt(gridMousePos, buildingSize);
+                if (!canPlace)
+                    selectedBuilding.PreviewInvalid();
+                else
+                    selectedBuilding.PreviewValid();
             }
         }
 
         public void StartPlacement(int ID)
         {
-            StopPlacement();
+            CancelPlacement();
             selectedBuilding = Instantiate(buildingDatabase.buildingsData.Find(x => x.ID == ID).Prefab);
-            selectedBuilding.StartPreview();
+            selectedBuilding.PreviewValid();
+            selectedBuildingID = ID;
 
-            _isBuildingSelected = selectedBuilding != null;
+            isBuildingSelected = selectedBuilding != null;
+            mouseControl.OnClicked += PlaceBuilding;
+            mouseControl.OnExit += CancelPlacement;
         }
 
-        public void StopPlacement()
+        private void PlaceBuilding()
         {
-            if (_isBuildingSelected)
+            if (mouseControl.IsPointerOverUI())
+                return;
+
+            Vector3 worldMousePos = mouseControl.GetCursorMapPosition();
+            Vector3Int gridMousePos = grid.WorldToCell(worldMousePos);
+
+            Vector2Int buildingSize = buildingDatabase.buildingsData.Find(x => x.ID == selectedBuildingID).Size;
+
+            bool canPlace = buildingData.CanPlaceObjectAt(gridMousePos, buildingSize);
+            if (!canPlace)
+                return;
+
+            buildingData.AddObjectAt(gridMousePos, buildingSize, selectedBuildingID, 0);
+            selectedBuilding.Construct();
+            selectedBuilding = null;
+            isBuildingSelected = false;
+
+            mouseControl.OnClicked -= PlaceBuilding;
+            mouseControl.OnExit -= CancelPlacement;
+        }
+
+
+        public void CancelPlacement()
+        {
+            if (isBuildingSelected)
             {
                 Destroy(selectedBuilding.gameObject);
                 selectedBuilding = null;
-                _isBuildingSelected = false;
+                isBuildingSelected = false;
             }
         }
     }

@@ -14,13 +14,19 @@ namespace Construction
             Constructed
         }
 
-        [SerializeField] private Material previewMaterial;
+        [SerializeField] private Material previewMaterial, previewInvalidMaterial, material;
         [SerializeField] private MeshRenderer objectRenderer;
 
         // public Vector2Int gridPosition { get; internal set; }
         public BuildingStates state { get; internal set; }
 
-        internal void StartPreview()
+        private void Update()
+        {
+            if (state == BuildingStates.Constructing)
+                FinishConstruction();
+        }
+
+        internal void PreviewValid()
         {
             state = BuildingStates.Preview;
             objectRenderer.materials = new[] { previewMaterial };
@@ -28,9 +34,25 @@ namespace Construction
             objectRenderer.receiveShadows = false;
         }
 
+        internal void PreviewInvalid()
+        {
+            state = BuildingStates.Preview;
+            objectRenderer.materials = new[] { previewInvalidMaterial };
+            objectRenderer.shadowCastingMode = ShadowCastingMode.Off;
+            objectRenderer.receiveShadows = false;
+        }
+
         internal void Construct()
         {
             state = BuildingStates.Constructing;
+        }
+
+        internal void FinishConstruction()
+        {
+            state = BuildingStates.Constructed;
+            objectRenderer.materials = new[] { material };
+            objectRenderer.shadowCastingMode = ShadowCastingMode.On;
+            objectRenderer.receiveShadows = true;
         }
     }
 }
