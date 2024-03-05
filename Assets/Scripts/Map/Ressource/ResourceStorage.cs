@@ -2,7 +2,7 @@
 using UnityEngine;
 
 public class ResourceStorage : MonoBehaviour, IResourceStorage {
-    private Dictionary<ResourceNode.ResourceType, int> storedResources = new Dictionary<ResourceNode.ResourceType, int>();
+    public Dictionary<ResourceNode.ResourceType, int> storedResources = new Dictionary<ResourceNode.ResourceType, int>();
 
     public void AddResource(ResourceNode.ResourceType type, int amount) {
         if (!storedResources.ContainsKey(type)) {

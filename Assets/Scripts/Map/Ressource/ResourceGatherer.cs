@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ResourceGatherer : MonoBehaviour, IGatherable {
     public int carryingCapacity = 100;
-    private int currentCarryingAmount = 0;
+    [SerializeField] private int currentCarryingAmount = 0;
     public ResourceNode.ResourceType currentResourceType;
 
     void OnEnable() {

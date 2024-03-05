@@ -55,8 +55,8 @@ public class EntitiesController : MonoBehaviour
             if (Physics.Raycast(ray, out hit, 1000))
             {
                 ResourceNode hitResourceNode = hit.collider.GetComponent<ResourceNode>();
+                ResourceStorage hitResourceStorage = hit.collider.GetComponent<ResourceStorage>();
                 if (hitResourceNode != null) {
-                    // Iterate over all selected entities to initiate gathering if they are gatherers
                     foreach (GameObject entity in selectedEntities) {
                         ResourceGatherer gatherer = entity.GetComponent<ResourceGatherer>();
                         if (gatherer != null) {
@@ -64,6 +64,17 @@ public class EntitiesController : MonoBehaviour
                             // Do not break here; allow all selected gatherers to attempt to gather
                         }
                     }
+                }
+
+                if (hitResourceStorage != null)
+                {
+                    foreach (GameObject entity in selectedEntities) {
+                        ResourceGatherer gatherer = entity.GetComponent<ResourceGatherer>();
+                        if (gatherer != null) {
+                            gatherer.DepositResources(hitResourceStorage);
+                            // Do not break here; allow all selected gatherers to attempt to gather
+                        }
+                    }   
                 }
 
                 int entitiesPerSide = Mathf.CeilToInt(Mathf.Sqrt(selectedEntities.Count));
