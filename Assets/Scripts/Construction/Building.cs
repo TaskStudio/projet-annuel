@@ -16,14 +16,18 @@ namespace Construction
 
         [SerializeField] private Material previewMaterial, previewInvalidMaterial, material;
         [SerializeField] private MeshRenderer objectRenderer;
+        private float constructionTime;
 
-        // public Vector2Int gridPosition { get; internal set; }
         public BuildingStates state { get; internal set; }
 
         private void Update()
         {
             if (state == BuildingStates.Constructing)
-                FinishConstruction();
+            {
+                constructionTime -= Time.deltaTime;
+                if (constructionTime <= 0)
+                    FinishConstruction();
+            }
         }
 
         internal void PreviewValid()
@@ -42,9 +46,10 @@ namespace Construction
             objectRenderer.receiveShadows = false;
         }
 
-        internal void Construct()
+        internal void StartConstruction(float constructionTime)
         {
             state = BuildingStates.Constructing;
+            this.constructionTime = constructionTime;
         }
 
         internal void FinishConstruction()

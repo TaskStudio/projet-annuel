@@ -9,15 +9,21 @@ namespace Construction
         [SerializeField] private MouseControl mouseControl;
         [SerializeField] private BuildingDatabaseSO buildingDatabase;
 
-        private GridData buildingData;
+        private GridData buildingsData;
         private bool isBuildingSelected;
+
         private Building selectedBuilding;
+        private BuildingData selectedBuildingData;
         private int selectedBuildingID;
 
         private void Start()
         {
+            buildingsData = new GridData();
             isBuildingSelected = false;
-            buildingData = new GridData();
+
+            selectedBuilding = null;
+            selectedBuildingData = null;
+            selectedBuildingID = -1;
         }
 
         private void Update()
@@ -29,9 +35,9 @@ namespace Construction
                 Vector3 gridWorldPos = grid.CellToWorld(gridMousePos);
                 selectedBuilding.transform.position = gridWorldPos;
 
-                Vector2Int buildingSize = buildingDatabase.buildingsData.Find(x => x.ID == selectedBuildingID).Size;
+                Vector2Int buildingSize = selectedBuildingData.Size;
 
-                bool canPlace = buildingData.CanPlaceObjectAt(gridMousePos, buildingSize);
+                bool canPlace = buildingsData.CanPlaceObjectAt(gridMousePos, buildingSize);
                 if (!canPlace)
                     selectedBuilding.PreviewInvalid();
                 else
@@ -42,7 +48,9 @@ namespace Construction
         public void StartPlacement(int ID)
         {
             CancelPlacement();
-            selectedBuilding = Instantiate(buildingDatabase.buildingsData.Find(x => x.ID == ID).Prefab);
+
+            selectedBuildingData = buildingDatabase.buildingsData.Find(x => x.ID == ID);
+            selectedBuilding = Instantiate(selectedBuildingData.Prefab);
             selectedBuilding.PreviewValid();
             selectedBuildingID = ID;
 
@@ -59,14 +67,12 @@ namespace Construction
             Vector3 worldMousePos = mouseControl.GetCursorMapPosition();
             Vector3Int gridMousePos = grid.WorldToCell(worldMousePos);
 
-            Vector2Int buildingSize = buildingDatabase.buildingsData.Find(x => x.ID == selectedBuildingID).Size;
-
-            bool canPlace = buildingData.CanPlaceObjectAt(gridMousePos, buildingSize);
+            bool canPlace = buildingsData.CanPlaceObjectAt(gridMousePos, selectedBuildingData.Size);
             if (!canPlace)
                 return;
 
-            buildingData.AddObjectAt(gridMousePos, buildingSize, selectedBuildingID, 0);
-            selectedBuilding.Construct();
+            buildingsData.AddObjectAt(gridMousePos, selectedBuildingData.Size, selectedBuildingID, 0);
+            selectedBuilding.StartConstruction(selectedBuildingData.ConstructionTime);
             selectedBuilding = null;
             isBuildingSelected = false;
 
@@ -81,6 +87,7 @@ namespace Construction
             {
                 Destroy(selectedBuilding.gameObject);
                 selectedBuilding = null;
+                selectedBuildingData = null;
                 isBuildingSelected = false;
             }
         }

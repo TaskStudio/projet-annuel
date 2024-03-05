@@ -49,6 +49,7 @@ MonoBehaviour:
   previewInvalidMaterial: {fileID: 2100000, guid: 5dcb4d40f145f9a4ca1819c3a9a76e9f, type: 2}
   material: {fileID: 2100000, guid: 905cc732777d7444186842b05d389e8e, type: 2}
   objectRenderer: {fileID: 475582116273836946}
+  constructionTime: 5
 --- !u!1 &475582116273836944
 GameObject:
   m_ObjectHideFlags: 0
