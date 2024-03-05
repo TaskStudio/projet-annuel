@@ -113,8 +113,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  Entity:
+    serializedVersion: 2
+    m_Bits: 0
   raycastLength: 5
   collisionAvoidanceTurn: 0.5
+  collisionRadius: 2
+  avoidanceStrength: 1
 --- !u!114 &8440928518112588212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,3 +135,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c01c8f9dd02ad8438f929dc82efd73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectionIndicatorPrefab: {fileID: 919132149155446097, guid: 0bdbd1def777b86498320439c3f29de4, type: 3}
