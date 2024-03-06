@@ -54,6 +54,35 @@ public class EntitiesController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, 1000))
             {
+                ResourceNode hitResourceNode = hit.collider.GetComponent<ResourceNode>();
+                ResourceStorage hitResourceStorage = hit.collider.GetComponent<ResourceStorage>();
+
+                if (hitResourceNode != null)
+                {
+                    foreach (GameObject entity in selectedEntities)
+                    {
+                        ResourceGatherer gatherer = entity.GetComponent<ResourceGatherer>();
+                        if (gatherer != null)
+                        {
+                            gatherer.SetTargetResourceNode(hitResourceNode);
+                        }
+                    }
+                }
+
+                if (hitResourceStorage != null)
+                {
+                    foreach (GameObject entity in selectedEntities)
+                    {
+                        ResourceGatherer gatherer = entity.GetComponent<ResourceGatherer>();
+                        if (gatherer != null)
+                        {
+                            gatherer.SetTargetResourceStorage(hitResourceStorage);
+                        }
+                    }   
+                }
+
+
+
                 int entitiesPerSide = Mathf.CeilToInt(Mathf.Sqrt(selectedEntities.Count));
                 float spacing = 1f; // Spacing
                 float totalLength = spacing * (entitiesPerSide - 1);
@@ -77,6 +106,7 @@ public class EntitiesController : MonoBehaviour
                         }
 
                         entityIndex++;
+                        
                     }
                 }
             }
