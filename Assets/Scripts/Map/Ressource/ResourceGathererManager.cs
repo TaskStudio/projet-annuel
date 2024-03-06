@@ -27,21 +27,22 @@ public class ResourceGathererManager : MonoBehaviour {
     }
 
     // Example functionality: Find the nearest resource node for a gatherer
-    public ResourceNode FindNearestResourceNode(Vector3 position, ResourceNode.ResourceType resourceType) {
-        ResourceNode[] allNodes = FindObjectsOfType<ResourceNode>();
-        ResourceNode nearestNode = null;
+    public ResourceStorage FindNearestResourceStorage(Vector3 position) 
+    {
+        ResourceStorage[] allResourceStorage = FindObjectsOfType<ResourceStorage>();
+        ResourceStorage nearestResourceStorage = null;
         float nearestDistance = float.MaxValue;
 
-        foreach (ResourceNode node in allNodes) {
-            if (node.resourceType == resourceType) {
-                float distance = Vector3.Distance(position, node.transform.position);
-                if (distance < nearestDistance) {
-                    nearestDistance = distance;
-                    nearestNode = node;
-                }
+        foreach (ResourceStorage node in allResourceStorage)
+        {
+            float distance = Vector3.Distance(position, node.transform.position);
+            if (distance < nearestDistance)
+            {
+                nearestDistance = distance;
+                nearestResourceStorage = node;
             }
         }
 
-        return nearestNode;
+        return nearestResourceStorage;
     }
 }

@@ -56,26 +56,32 @@ public class EntitiesController : MonoBehaviour
             {
                 ResourceNode hitResourceNode = hit.collider.GetComponent<ResourceNode>();
                 ResourceStorage hitResourceStorage = hit.collider.GetComponent<ResourceStorage>();
-                if (hitResourceNode != null) {
-                    foreach (GameObject entity in selectedEntities) {
+
+                if (hitResourceNode != null)
+                {
+                    foreach (GameObject entity in selectedEntities)
+                    {
                         ResourceGatherer gatherer = entity.GetComponent<ResourceGatherer>();
-                        if (gatherer != null) {
-                            gatherer.GatherResources(hitResourceNode);
-                            // Do not break here; allow all selected gatherers to attempt to gather
+                        if (gatherer != null)
+                        {
+                            gatherer.SetTargetResourceNode(hitResourceNode);
                         }
                     }
                 }
 
                 if (hitResourceStorage != null)
                 {
-                    foreach (GameObject entity in selectedEntities) {
+                    foreach (GameObject entity in selectedEntities)
+                    {
                         ResourceGatherer gatherer = entity.GetComponent<ResourceGatherer>();
-                        if (gatherer != null) {
-                            gatherer.DepositResources(hitResourceStorage);
-                            // Do not break here; allow all selected gatherers to attempt to gather
+                        if (gatherer != null)
+                        {
+                            gatherer.SetTargetResourceStorage(hitResourceStorage);
                         }
                     }   
                 }
+
+
 
                 int entitiesPerSide = Mathf.CeilToInt(Mathf.Sqrt(selectedEntities.Count));
                 float spacing = 1f; // Spacing
