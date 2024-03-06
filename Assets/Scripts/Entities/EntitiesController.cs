@@ -144,6 +144,12 @@ public class EntitiesController : MonoBehaviour
     {
         selectedEntities.Remove(entity);
     }
+    
+    public bool IsEntitySelected(GameObject entity)
+    {
+        return selectedEntities.Contains(entity);
+    }
+
 
 
 
