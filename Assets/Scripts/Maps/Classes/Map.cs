@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace Maps.Classes
 {
-    public class Map : IMap
+    public class Map : MonoBehaviour, IMap
     {
-        public IZone AllianceZone { get; private set; }
-        public IZone MonsterZone { get; private set; }
+        public Zone AllianceZone { get; private set; }
+        public Zone MonsterZone { get; private set; }
         
         private Collider _mapCollider; // Reference to the map's collider
         private bool _isMapColliderNull;
