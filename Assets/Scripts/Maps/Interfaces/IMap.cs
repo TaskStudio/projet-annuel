@@ -1,13 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
+using Maps.Classes;
 using UnityEngine;
 
 namespace Maps.Interfaces
 {
-    public class IMap : MonoBehaviour
+    internal interface IMap
     {
-         IZone AllianceZone { get; }
-         IZone MonsterZone { get; }
+        Zone AllianceZone { get; }
+        Zone MonsterZone { get; }
+        Vector3 ClampPositionToLimits(Vector3 position);
     }
 }
 

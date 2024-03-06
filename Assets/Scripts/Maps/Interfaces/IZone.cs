@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Maps.Interfaces
 {
-    public class IZone : MonoBehaviour
+    internal interface IZone
     {
         Vector3 Position { get; }
         string Name { get; }
