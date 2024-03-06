@@ -18,6 +18,7 @@ public class EntityManager : MonoBehaviour
             Instance = this;
         }
     }
+    
 
     public void RegisterEntity(Entity entity)
     {
