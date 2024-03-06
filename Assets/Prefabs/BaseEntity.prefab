@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: -8309717558407393170}
   - component: {fileID: 8440928518112588212}
   - component: {fileID: -5772077263641427325}
+  - component: {fileID: 7876752043349608570}
   m_Layer: 3
   m_Name: BaseEntity
   m_TagString: Entity
@@ -153,6 +154,18 @@ MonoBehaviour:
   hp: 100
   projectilePrefab: {fileID: 4767235098883473521, guid: b2dd30f90556ba249a6303a71de6b72c, type: 3}
   projectileSpawnPoint: {fileID: 6644346476222915570}
+--- !u!114 &7876752043349608570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4489774148682684672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c7047c0c03ded841835890980172172, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6474036145557002104
 GameObject:
   m_ObjectHideFlags: 0
