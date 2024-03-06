@@ -21,5 +21,15 @@ public class Projectile : MonoBehaviour
             }
             Destroy(gameObject);
         }
+        
+        if (collision.gameObject.CompareTag("EnemyBase"))
+        {
+            EnemyBase enemybase = collision.gameObject.GetComponent<EnemyBase>();
+            if (enemybase != null)
+            {
+                enemybase.TakeDamage(damage);
+            }
+            Destroy(gameObject);
+        }
     }
 }

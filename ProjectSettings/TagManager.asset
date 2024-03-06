@@ -7,6 +7,8 @@ TagManager:
   - Entity
   - Ground
   - Enemy
+  - Projectile
+  - EnemyBase
   layers:
   - Default
   - TransparentFX
