@@ -3,6 +3,44 @@ using UnityEngine;
 public class Entity : MonoBehaviour
 {
     public int hp = 100;
+    public GameObject projectilePrefab; 
+    public Transform projectileSpawnPoint;
+    
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.A) && IsEntitySelected())
+        {
+            ShootProjectile();
+        }
+    }
+
+    private bool IsEntitySelected()
+    {
+        // Vous avez besoin d'accéder au script EntitiesController pour vérifier la sélection
+        EntitiesController entitiesController = FindObjectOfType<EntitiesController>();
+        if (entitiesController != null)
+        {
+            return entitiesController.IsEntitySelected(gameObject);
+        }
+        return false;
+    }
+
+    
+    private void ShootProjectile()
+    {
+     
+        GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
+        // Diriger le projectile vers la position de la souris
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 1000f))
+        {
+            Vector3 targetPoint = hit.point;
+            targetPoint.y = projectileSpawnPoint.position.y; 
+            projectile.transform.LookAt(targetPoint);
+            projectile.GetComponent<Projectile>().damage = 100; 
+        }
+    }
 
     protected virtual void Awake()
     {

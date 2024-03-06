@@ -17,4 +17,13 @@ public class Enemy : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+    
+    public void TakeDamage(int damage)
+    {
+        hp -= damage;
+        if (hp <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
 }
