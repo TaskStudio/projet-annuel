@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyBase : MonoBehaviour
 {
-    public int hp = 1000;
+    private int hp = 1000;
     
     public void TakeDamage(int damage)
     {
