@@ -15,6 +15,9 @@ public class EntityMover : MonoBehaviour
 
     private float groundCheckDistance;
     private Collider entityCollider;
+    public Vector3 TargetPosition => targetPosition;
+    public bool IsMoving => isMoving;
+
 
     private void Start()
     {

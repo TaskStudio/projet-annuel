@@ -1,85 +1,129 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class ResourceGatherer : MonoBehaviour, IGatherable {
+public class ResourceGatherer : MonoBehaviour
+{
     public int carryingCapacity = 100;
-    [SerializeField] private int currentCarryingAmount = 0;
+    private int currentCarryingAmount = 0;
     public ResourceNode.ResourceType currentResourceType;
-    public float gatherThresholdDistance = 5.0f;
-    private Transform currentTarget;
-    private ResourceNode currentResourceNode;
-    private ResourceStorage currentResourceStorage;
+    private IMovementStrategy movementStrategy;
+
+    // State management
+    public IState CurrentState { get; private set; }
+    public SearchingForResourceState searchingForResourceState = new SearchingForResourceState();
+    public GatheringResourceState gatheringResourceState = new GatheringResourceState();
+    public ReturningToStorageState returningToStorageState = new ReturningToStorageState();
+    public DepositingResourceState depositingResourceState = new DepositingResourceState();
+    private EntityMover entityMover;
+    private NavMeshAgent navMeshAgent;
+
+    
+
+    void Start()
+    {
+        var agent = GetComponent<NavMeshAgent>();
+        SetMovementStrategy(new NavMeshAgentMovementStrategy(agent));
+        TransitionToState(searchingForResourceState);
+    }
+
 
     void Update()
     {
-        // Check if we have a target and act accordingly
-        if (currentTarget != null)
+        CurrentState.UpdateState(this);
+    }
+
+    public void TransitionToState(IState newState)
+    {
+        CurrentState = newState;
+        newState.EnterState(this);
+    }
+
+    public void MoveToTarget(Vector3 target)
+    {
+        movementStrategy.MoveTo(target);
+    }
+
+    public void SetMovementStrategy(IMovementStrategy strategy)
+    {
+        this.movementStrategy = strategy;
+    }
+
+    // The rest of your ResourceGatherer code remains unchanged
+
+    public GameObject FindClosestTaggedObject(string tag)
+    {
+        GameObject[] taggedObjects = GameObject.FindGameObjectsWithTag(tag);
+        GameObject closest = null;
+        float closestDistance = Mathf.Infinity;
+        Vector3 currentPosition = transform.position;
+        foreach (GameObject obj in taggedObjects)
         {
-            float distanceToTarget = Vector3.Distance(transform.position, currentTarget.position);
-            if (distanceToTarget <= gatherThresholdDistance)
+            Vector3 directionToTarget = obj.transform.position - currentPosition;
+            float dSquared = directionToTarget.sqrMagnitude;
+            if (dSquared < closestDistance)
             {
-                // Check and perform the appropriate action based on the target type
-                if (currentResourceNode != null)
-                {
-                    GatherResources(currentResourceNode);
-                    // Clear the target after gathering to prevent repeated gathering on each frame
-                    ClearCurrentTarget();
-                }
-                else if (currentResourceStorage != null)
-                {
-                    DepositResources(currentResourceStorage);
-                    // Clear the target after depositing
-                    ClearCurrentTarget();
-                }
+                closestDistance = dSquared;
+                closest = obj;
+            }
+        }
+        return closest;
+    }
+
+    public void GatherResources(ResourceNode node)
+    {
+        if (movementStrategy.IsAtDestination(node.transform.position) && currentCarryingAmount < carryingCapacity && node != null)
+        {
+            int gatherAmount = Mathf.Min(node.resourceAmount, carryingCapacity - currentCarryingAmount);
+            currentCarryingAmount += gatherAmount;
+            node.resourceAmount -= gatherAmount;
+            currentResourceType = node.resourceType;
+
+            if (currentCarryingAmount >= carryingCapacity || node.resourceAmount <= 0)
+            {
+                TransitionToState(returningToStorageState);
             }
         }
     }
 
-    public void SetTargetResourceNode(ResourceNode resourceNode)
+
+    public void DepositResources(ResourceStorage storage)
     {
-        currentResourceNode = resourceNode;
-        currentResourceStorage = null; // Ensure storage is null when targeting a node
-        currentTarget = resourceNode.transform;
-    }
+        // Assuming storage has a Transform or a method to get its position
+        Vector3 storagePosition = storage.transform.position; 
 
-    public void SetTargetResourceStorage(ResourceStorage resourceStorage)
-    {
-        currentResourceStorage = resourceStorage;
-        currentResourceNode = null; // Ensure node is null when targeting storage
-        currentTarget = resourceStorage.transform;
-    }
-
-    private void ClearCurrentTarget()
-    {
-        currentTarget = null;
-        currentResourceNode = null;
-        currentResourceStorage = null;
-    }
-    void OnEnable() {
-        ResourceGathererManager.Instance.RegisterGatherer(this);
-    }
-
-    void OnDisable() {
-        ResourceGathererManager.Instance.UnregisterGatherer(this);
-    }
-
-    public void GatherResources(ResourceNode resourceNode) {
-        if (currentCarryingAmount < carryingCapacity) {
-            int amountToGather = Mathf.Min(carryingCapacity - currentCarryingAmount, resourceNode.resourceAmount);
-            currentCarryingAmount += resourceNode.GatherResource(amountToGather);
-            currentResourceType = resourceNode.resourceType;
-            // currentResourceNode = resourceNode;
-            // currentRessourceStorage = ResourceGathererManager.Instance.FindNearestResourceStorage(this.transform.position);
-
-        }
-    }
-
-    public void DepositResources(IResourceStorage storage) {
-        if (currentCarryingAmount > 0) {
+        if (movementStrategy.IsAtDestination(storagePosition) && currentCarryingAmount > 0)
+        {
             storage.AddResource(currentResourceType, currentCarryingAmount);
-            currentCarryingAmount = 0; // Reset gatherer's carried resources
+            currentCarryingAmount = 0;
+            TransitionToState(searchingForResourceState);
         }
     }
-}
 
+    public ResourceNode GetCurrentResourceNode()
+    {
+        GameObject closestNodeObj = FindClosestTaggedObject("ResourceNode");
+        if (closestNodeObj != null)
+        {
+            return closestNodeObj.GetComponent<ResourceNode>();
+        }
+        return null;
+    }
+    public void UseNavMeshForNavigation()
+    {
+        navMeshAgent.enabled = true; // Disable NavMeshAgent to use EntityMover
+        SetMovementStrategy(new NavMeshAgentMovementStrategy(GetComponent<NavMeshAgent>()));
+    }
+    public bool IsAtDestination(Vector3 destination)
+    {
+        return movementStrategy.IsAtDestination(destination);
+    }
+    public void UseEntityMoverForNavigation()
+    {
+        navMeshAgent.enabled = false; // Disable NavMeshAgent to use EntityMover
+        SetMovementStrategy(new EntityMoverMovementStrategy(GetComponent<EntityMover>()));
+    }
+
+
+
+
+}

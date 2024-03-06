@@ -15,10 +15,10 @@ GameObject:
   - component: {fileID: 1566574054741405527}
   m_Layer: 0
   m_Name: RessourceNode
-  m_TagString: Untagged
+  m_TagString: ResourceNode
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1007870573863506639
 Transform:
@@ -113,3 +113,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceType: 0
   resourceAmount: 100
+  isDepleted: 0

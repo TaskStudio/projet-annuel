@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Entity
   - Ground
+  - ResourceNode
+  - ResourceStorage
   layers:
   - Default
   - TransparentFX
