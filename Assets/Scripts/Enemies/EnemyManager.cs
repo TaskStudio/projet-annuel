@@ -24,8 +24,39 @@ public class EnemyManager : MonoBehaviour
 
     private GameObject SpawnEnemy()
     {
-        return Instantiate(enemyPrefab, new Vector3(0, 1, 0), Quaternion.identity);
+        float spawnWidth = 10.0f; // La largeur de la ligne de spawn
+        Vector3 spawnPosition = Vector3.zero; 
+        bool positionFound = false;
+        
+        for (int i = 0; i < 10; i++)
+        {
+            float randomX = Random.Range(-spawnWidth / 2, spawnWidth / 2);
+            spawnPosition = transform.position - transform.forward * 5 + transform.right * randomX;
+            spawnPosition.y = 1;
+
+            // Vérifie si l'espace est libre en utilisant la taille de l'ennemi
+            if (!Physics.CheckSphere(spawnPosition, 0.5f))
+            {
+                positionFound = true;
+                break;
+            }
+        }
+
+        if (positionFound)
+        {
+            // Si une position valide est trouvée, fait apparaître l'ennemi
+            return Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+        }
+        else
+        {
+            // Si aucune position valide n'est trouvée, retourne null ou gère le cas autrement
+            Debug.LogWarning("Couldn't find a valid spawn position for the enemy.");
+            return null;
+        }
     }
+
+    
+
 
     private IEnumerator MoveEnemyToClosestEntity(GameObject enemy)
     {
