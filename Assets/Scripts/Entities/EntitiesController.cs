@@ -26,6 +26,7 @@ public class EntitiesController : MonoBehaviour
                 ClearSelection();
             }
         }
+        
 
         // Initiate Drag Selection
         if (Input.GetMouseButton(0))
@@ -101,10 +102,17 @@ public class EntitiesController : MonoBehaviour
 
     private void ClearSelection()
     {
-        foreach (GameObject entity in selectedEntities)
+        for (int i = selectedEntities.Count - 1; i >= 0; i--)
         {
+            GameObject entity = selectedEntities[i];
+            if (entity == null) 
+            {
+                selectedEntities.RemoveAt(i);
+                continue;
+            }
+
             EntityVisuals entityVisuals = entity.GetComponent<EntityVisuals>();
-            if (entityVisuals != null) 
+            if (entityVisuals != null)
             {
                 entityVisuals.UpdateVisuals(false);
             }
@@ -120,6 +128,8 @@ public class EntitiesController : MonoBehaviour
 
         foreach (GameObject entity in allEntities)
         {
+            if (entity == null) continue;
+            
             Vector3 screenPosition = mainCamera.WorldToScreenPoint(entity.transform.position);
             screenPosition.y = Screen.height - screenPosition.y; 
 
@@ -129,6 +139,12 @@ public class EntitiesController : MonoBehaviour
             }
         }
     }
+    
+    public void DeregisterEntity(GameObject entity)
+    {
+        selectedEntities.Remove(entity);
+    }
+
 
 
 
@@ -176,6 +192,8 @@ public static class Utils
         // Draw bottom
         Utils.DrawScreenRect(new Rect(rect.xMin, rect.yMax - thickness, rect.width, thickness), color);
     }
+    
+    
     
     
 }
