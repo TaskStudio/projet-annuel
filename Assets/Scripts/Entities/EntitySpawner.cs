@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EntitySpawner : MonoBehaviour {
     public GameObject entityPrefab;
+    public GameObject spawnCenter; // GameObject de référence pour le point de spawn
     public float spawnDelay = 2f;
     private Queue<int> spawnQueue = new Queue<int>();
     private bool isSpawning = false;
@@ -31,28 +32,37 @@ public class EntitySpawner : MonoBehaviour {
     }
 
     void FindAndSpawnEntity() {
-        for (int i = 0; ; i++) {
-            int row = i / entitiesPerRow;
-            int col = i % entitiesPerRow;
-            Vector3 spawnPosition = CalculateSpawnPosition(col, row);
+        // Vérifie si aucune entité n'a été spawnée et si oui, spawn la première entité au spawnCenter
+        if (spawnedPositions.Count == 0) {
+            Vector3 spawnPosition = spawnCenter.transform.position;
+            Instantiate(entityPrefab, spawnPosition, Quaternion.identity);
+            spawnedPositions.Add(spawnPosition);
+        } else {
+            for (int i = 0; ; i++) {
+                int row = i / entitiesPerRow;
+                int col = i % entitiesPerRow;
+                Vector3 spawnPosition = CalculateSpawnPosition(col, row);
             
-            if (!Physics.CheckSphere(spawnPosition, 0.5f)) {
-                Instantiate(entityPrefab, spawnPosition, Quaternion.identity);
-                spawnedPositions.Add(spawnPosition);
-                break; 
+                if (!Physics.CheckSphere(spawnPosition, 0.5f)) {
+                    Instantiate(entityPrefab, spawnPosition, Quaternion.identity);
+                    spawnedPositions.Add(spawnPosition);
+                    break; 
+                }
             }
         }
     }
 
+
     Vector3 CalculateSpawnPosition(int col, int row) {
-        Vector3 position = new Vector3(
-            col * spacing,
-            1,
-            row * spacing
+        Vector3 basePosition = spawnCenter != null ? spawnCenter.transform.position : Vector3.zero;
+        Vector3 offset = new Vector3(
+            col * spacing - (entitiesPerRow - 1) * spacing / 2,
+            0, 
+            row * spacing - (entitiesPerRow - 1) * spacing / 2
         );
 
-        position.x -= (entitiesPerRow - 1) * spacing / 2;
-        position.z -= (entitiesPerRow - 1) * spacing / 2;
-        return position;
+        return new Vector3(basePosition.x + offset.x, 1, basePosition.z + offset.z);
     }
+
+
 }
