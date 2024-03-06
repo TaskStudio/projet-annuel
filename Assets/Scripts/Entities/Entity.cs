@@ -28,8 +28,7 @@ public class Entity : MonoBehaviour
     
     private void ShootProjectile()
     {
-     
-        GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
+        GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity); 
         // Diriger le projectile vers la position de la souris
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -37,10 +36,12 @@ public class Entity : MonoBehaviour
         {
             Vector3 targetPoint = hit.point;
             targetPoint.y = projectileSpawnPoint.position.y; 
-            projectile.transform.LookAt(targetPoint);
+            Vector3 direction = targetPoint - projectile.transform.position;
+            projectile.transform.forward = direction.normalized; 
             projectile.GetComponent<Projectile>().damage = 100; 
         }
     }
+
 
     protected virtual void Awake()
     {
